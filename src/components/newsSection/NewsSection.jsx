@@ -13,7 +13,7 @@ const NewsSection = () => {
         <h1 className="text-xl font-bold text-[#374151]">What's happening</h1>
 
         <div className="flex flex-col gap-6">
-          <NewsCard />
+          {/* <NewsCard /> */}
           
         </div>
       </div>

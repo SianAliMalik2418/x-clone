@@ -33,7 +33,7 @@ const NewsCard = () => {
         <div className="text-center font-bold">Loading...</div>
       ) : (
         <>
-          {news.slice(0, articleCount).map((singleNews) => (
+          {news?.slice(0, articleCount).map((singleNews) => (
             <a
               href={singleNews.url}
               key={singleNews.url}
