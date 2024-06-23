@@ -1,11 +1,12 @@
 import UploadImage from "@/components/UploadImage";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
-import { authOptions } from "./api/auth/[...nextauth]/options";
+import { authOptions } from "../api/auth/[...nextauth]/options";
 
 export default async function Home() {
   // Cant use client while using server session.
   const session = await getServerSession(authOptions);
+  console.log(session)
 
   return (
     <div className="flex min-h-screen w-[40%] flex-col border-x-2 border-gray-400 px-3">

@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth";
 
 const SideBar = async () => {
   const session = await getServerSession(authOptions);
+  console.log(session)
 
   return (
     <div className="sticky top-0 flex max-h-screen w-[25%] flex-col items-center justify-between py-5">
@@ -28,11 +29,14 @@ const SideBar = async () => {
 
       {session ? (
         <div className="flex cursor-pointer items-center gap-3 rounded-lg px-5 py-1 transition-all delay-200 hover:bg-gray-300">
-          <img src={session?.user.image} className="h-10 w-10 rounded-full" />
+          <img
+            src={`${session?.user.image || "https://i.pinimg.com/736x/0d/64/98/0d64989794b1a4c9d89bff571d3d5842.jpg"} `}
+            className="h-10 w-10 rounded-full"
+          />
 
           <div className="flex flex-col">
             <span className="font-semibold text-gray-600">
-              {session?.user.name}
+              {session?.user.name || session?.username}
             </span>
             <span className="-mt-1 whitespace-normal font-medium text-gray-400">
               {session?.user.email}

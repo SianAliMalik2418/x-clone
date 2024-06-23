@@ -1,8 +1,11 @@
 "use client";
 
-import { signIn, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const GoogleBtn = ({ session }) => {
+  const router = useRouter();
+
   return (
     <>
       {session ? (
@@ -14,7 +17,7 @@ const GoogleBtn = ({ session }) => {
         </button>
       ) : (
         <button
-          onClick={() => signIn("google")}
+          onClick={() => router.push("/api/auth/signin")}
           className="mt-2 rounded-lg bg-blue-500 px-20 py-2 font-semibold text-white hover:bg-blue-700"
         >
           Sign In
