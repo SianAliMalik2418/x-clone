@@ -1,12 +1,15 @@
 import UploadImage from "@/components/UploadImage";
 import { getServerSession } from "next-auth";
-import Image from "next/image";
 import { authOptions } from "../api/auth/[...nextauth]/options";
+import { avatarURL } from "@/lib/utils";
+import NewPostInput from "@/components/newPostInput";
 
 export default async function Home() {
   // Cant use client while using server session.
   const session = await getServerSession(authOptions);
-  console.log(session)
+  console.log(session);
+
+  
 
   return (
     <div className="flex min-h-screen w-[40%] flex-col border-x-2 border-gray-400 px-3">
@@ -19,18 +22,14 @@ export default async function Home() {
       {session ? (
         <div className="mt-5 flex border-b border-gray-300 pb-10">
           <div className="image w-[10%]">
-            {/* Image */}
-            <div className="h-10 w-10 rounded-full bg-red-500">
-              {/* PFP  */}
-            </div>
+            <img
+              src={session?.user?.image || avatarURL}
+              className="h-10 w-10 rounded-full bg-red-500"
+            />
           </div>
 
           <div className="ml-2 flex w-[90%] flex-col gap-4">
-            <input
-              type="text"
-              className="border-b border-gray-400 pb-7 pt-1 outline-none"
-              placeholder="What's Happening"
-            />
+            <NewPostInput />
 
             <div className="flex items-center justify-between">
               <UploadImage />

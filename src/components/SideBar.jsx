@@ -5,6 +5,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { IoMdHome } from "react-icons/io";
 import GoogleBtn from "./GoogleBtn";
 import { getServerSession } from "next-auth";
+import { avatarURL } from "@/lib/utils";
 
 const SideBar = async () => {
   const session = await getServerSession(authOptions);
@@ -30,7 +31,7 @@ const SideBar = async () => {
       {session ? (
         <div className="flex cursor-pointer items-center gap-3 rounded-lg px-5 py-1 transition-all delay-200 hover:bg-gray-300">
           <img
-            src={`${session?.user.image || "https://i.pinimg.com/736x/0d/64/98/0d64989794b1a4c9d89bff571d3d5842.jpg"} `}
+            src={`${session?.user.image || avatarURL} `}
             className="h-10 w-10 rounded-full"
           />
 

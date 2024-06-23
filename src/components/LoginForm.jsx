@@ -12,13 +12,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-import { signIn, useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { FcGoogle } from "react-icons/fc";
+import { useState } from "react";
 
 export function LoginForm() {
   const router = useRouter();
-
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -28,6 +30,7 @@ export function LoginForm() {
 
   const handleLogin = async (data) => {
     try {
+      setIsLoading(true);
       const resp = await signIn("credentials", {
         redirect: false,
         email: data.email,
@@ -37,15 +40,18 @@ export function LoginForm() {
       if (resp?.error) {
         console.log("Login error", resp.error);
         toast.error("Invalid Credentials!");
+        setIsLoading(false);
       } else {
         console.log("Logged in", resp);
         toast.success("Logged In!");
+        setIsLoading(true);
 
         router.replace("/");
         router.refresh();
       }
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
 
@@ -90,17 +96,26 @@ export function LoginForm() {
                 required
                 {...register("password", {
                   required: "Password is required",
-                  minLength: 8,
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters long",
+                  },
                 })}
               />
               {errors.password && (
                 <span className="text-red-500">{errors.password.message}</span>
               )}
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isLoading}>
               Login
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button
+              type="button"
+              onClick={() => signIn("google")}
+              variant="outline"
+              className="w-full border-2 border-gray-400 py-5"
+            >
+              <FcGoogle className="mr-2 text-lg" />
               Login with Google
             </Button>
           </div>
