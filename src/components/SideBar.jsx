@@ -9,7 +9,6 @@ import { avatarURL } from "@/lib/utils";
 
 const SideBar = async () => {
   const session = await getServerSession(authOptions);
-  console.log(session)
 
   return (
     <div className="sticky top-0 flex max-h-screen w-[25%] flex-col items-center justify-between py-5">

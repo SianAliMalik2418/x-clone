@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import SideBar from "@/components/SideBar";
 import NewsSection from "@/components/newsSection/NewsSection";
 import SessionWrapper from "@/components/SessionWrapper";
+import PostContextProvider from "@/components/context/PostContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,13 +17,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <SessionWrapper>
-        <body className={inter.className}>
-          <div className="container mx-auto flex min-h-screen w-full justify-between">
-            <SideBar />
-            {children}
-            <NewsSection />
-          </div>
-        </body>
+        <PostContextProvider>
+          <body className={inter.className}>
+            <div className="container mx-auto flex min-h-screen w-full justify-between">
+              <SideBar />
+              {children}
+              <NewsSection />
+            </div>
+          </body>
+        </PostContextProvider>
       </SessionWrapper>
     </html>
   );
