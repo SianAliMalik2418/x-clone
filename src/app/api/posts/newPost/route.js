@@ -4,6 +4,8 @@ import fs from "fs/promises";
 import { v4 as uuidv4 } from "uuid";
 import os from "os";
 import cloudinary from "cloudinary";
+import { PostModel } from "@/models/postModel";
+import { connectDB } from "@/db/dbConnect";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,11 +14,15 @@ cloudinary.config({
 });
 
 const uploadImagesToCloudinary = async (newFiles) => {
-  const multiplePhotosPromise = newFiles.map((file) =>
-    cloudinary.v2.uploader.upload(file.filePath, { folder: "nextjs-x-clone" }),
-  );
+  const multiplePhotosPromise = newFiles.map(async (file) => {
+    const resp = await cloudinary.v2.uploader.upload(file.filePath, {
+      folder: "nextjs-x-clone",
+    });
+    return resp.url;
+  });
 
-  return await Promise.all(multiplePhotosPromise);
+  const imgUrls = await Promise.all(multiplePhotosPromise);
+  return imgUrls;
 };
 
 const storeImagesTemporarily = async (files) => {
@@ -48,20 +54,35 @@ const storeImagesTemporarily = async (files) => {
 
 export const POST = async (request) => {
   try {
+    await connectDB();
     const reqBody = await request.formData();
+
     const files = reqBody.getAll("file");
+    const postCaption = reqBody.get("postCaption");
+    const userId = reqBody.get("userId");
 
     // Saving files in temp folder.
     const newFiles = await storeImagesTemporarily(files);
 
     // Returns the url
-    const photos = await uploadImagesToCloudinary(newFiles);
-    console.log(photos);
+    const photosUrl = await uploadImagesToCloudinary(newFiles);
+    console.log(photosUrl);
 
     // Delete the images from temp after sucessful upload.
-    newFiles.map((file) => fs.unlink(file.filePath));
+    newFiles.map(async (file) => await fs.unlink(file.filePath));
 
-    return NextResponse.json(reqBody);
+    const newPost = new PostModel({
+      userId,
+      postCaption,
+      imgUrls: photosUrl,
+    });
+
+    const createdPost = await newPost.save();
+
+    return NextResponse.json(
+      { postDetails: createdPost, message: "Post Created successfully!" },
+      { status: 201 },
+    );
   } catch (error) {
     console.log(error);
     return NextResponse.json(error);

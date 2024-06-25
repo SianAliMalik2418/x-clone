@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/options";
 
 import NewPost from "@/components/createNewPost/CreateNewPost";
+import PostsFeed from "@/components/PostsFeed";
 
 export default async function Home() {
   // Cant use client while using server session.
@@ -15,7 +16,14 @@ export default async function Home() {
         Home
       </span>
 
-      {session ? <NewPost /> : ""}
+      {session ? (
+        <>
+          <NewPost />
+        </>
+      ) : (
+        ""
+      )}
+      <PostsFeed />
     </div>
   );
 }

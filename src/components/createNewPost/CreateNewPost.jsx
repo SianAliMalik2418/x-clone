@@ -22,12 +22,13 @@ const CreateNewPost = () => {
 
   const handleCreateNewPost = handleSubmit(async (dataJSON) => {
     console.log(dataJSON);
-    // reset();
-    // setImageFiles([]);
+    reset();
+    setImageFiles([]);
 
     const formData = new FormData();
 
     formData.append("postCaption", dataJSON?.postCaption);
+    formData.append("userId" , session?.user?.id)
 
     if (dataJSON?.files.length > 0) {
       dataJSON?.files?.map((singleFile) => {
@@ -36,7 +37,7 @@ const CreateNewPost = () => {
     }
 
     try {
-      const resp = await axios.post("api/posts", formData);
+      const resp = await axios.post("api/posts/newPost", formData);
       console.log(resp);
     } catch (error) {
       console.log(error);
@@ -45,8 +46,8 @@ const CreateNewPost = () => {
 
   return (
     <FormProvider {...formMethods}>
-      <form>
-        <div className="mt-5 flex border-b border-gray-300 pb-10">
+      <form >
+        <div className="mt-5 flex border-b border-gray-300 ">
           <div className="image w-[10%]">
             <img
               src={session?.user?.image || avatarURL}
